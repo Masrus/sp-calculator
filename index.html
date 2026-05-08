@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Story Points калькулятор</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --color-bg: #ffffff;
+            --color-bg-secondary: #F2F2F2;
+            --color-bg-tertiary: #F2F2F2;
+            --color-text: #1a1918;
+            --color-text-secondary: #6b6866;
+            --color-text-tertiary: #9b9997;
+            --color-border: rgba(26, 25, 24, 0.15);
+            --color-border-secondary: rgba(26, 25, 24, 0.3);
+            --color-accent: #222222;
+            --color-accent-light: #ebebeb;
+            --color-amber-light: #faeeda;
+            --color-amber-dark: #633806;
+            --color-red-light: #fcebeb;
+            --color-red-dark: #791f1f;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --color-bg: #1a1918;
+                --color-bg-secondary: #2a2a2a;
+                --color-bg-tertiary: #222222;
+                --color-text: #f8f7f4;
+                --color-text-secondary: #b4b2a9;
+                --color-text-tertiary: #6b6866;
+                --color-border: rgba(248, 247, 244, 0.12);
+                --color-border-secondary: rgba(248, 247, 244, 0.25);
+                --color-accent: #f8f7f4;
+                --color-accent-light: #333333;
+                --color-amber-light: #633806;
+                --color-amber-dark: #fac775;
+                --color-red-light: #501313;
+                --color-red-dark: #f7c1c1;
+            }
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: var(--color-bg-tertiary);
+            color: var(--color-text);
+            line-height: 1.6;
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            max-width: 680px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .nav-tab {
+            background: transparent;
+            border: 0.5px solid var(--color-border);
+            border-radius: 8px;
+            padding: 10px 20px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.15s;
+            color: var(--color-text);
+            font-family: inherit;
+            font-weight: 400;
+        }
+
+        .nav-tab:hover {
+            background: var(--color-bg-secondary);
+        }
+
+        .nav-tab.active {
+            background: var(--color-blue-light);
+            border-color: var(--color-blue);
+            color: var(--color-blue-dark);
+            font-weight: 500;
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            font-size: 15px;
+            color: var(--color-text-secondary);
+        }
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        .factor-group {
+            background: var(--color-bg);
+            border: none;
+            border-radius: 12px;
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+        }
+
+        .factor-title {
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .factor-title i {
+            font-size: 20px;
+            color: var(--color-text-secondary);
+        }
+
+        .option-btn {
+            background: var(--color-bg-secondary);
+            border: none;
+            border-radius: 8px;
+            padding: 12px 14px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.15s;
+            color: var(--color-text);
+            text-align: left;
+            width: 100%;
+            margin-bottom: 8px;
+            font-family: inherit;
+            line-height: 1.5;
+        }
+
+        .option-btn:last-child { margin-bottom: 0; }
+
+        .option-btn:hover { background: #e8e8e8; }
+
+        .option-btn.active {
+            background: var(--color-accent);
+            color: #ffffff;
+        }
+
+        .option-btn strong {
+            font-weight: 500;
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        .result-card {
+            background: var(--color-bg);
+            border: none;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-top: 2rem;
+            text-align: center;
+            display: none;
+        }
+
+        .sp-result {
+            font-size: 64px;
+            font-weight: 500;
+            color: var(--color-text);
+            margin-bottom: 0.5rem;
+        }
+
+        .sp-label {
+            font-size: 15px;
+            color: var(--color-text-secondary);
+            margin-bottom: 1.5rem;
+        }
+
+        .description {
+            font-size: 14px;
+            line-height: 1.6;
+            color: var(--color-text);
+            text-align: left;
+            background: var(--color-bg-secondary);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .examples {
+            font-size: 13px;
+            color: var(--color-text-secondary);
+            text-align: left;
+            padding: 1rem;
+            background: var(--color-bg-secondary);
+            border-radius: 8px;
+            line-height: 1.6;
+        }
+
+        .warning {
+            margin-top: 1rem;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .warning-medium { background: var(--color-amber-light); color: var(--color-amber-dark); }
+        .warning-high { background: var(--color-red-light); color: var(--color-red-dark); }
+
+        .actions {
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 0.5px solid var(--color-border);
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            background: transparent;
+            border: 0.5px solid var(--color-border-secondary);
+            border-radius: 8px;
+            padding: 10px 16px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.15s;
+            color: var(--color-text);
+            font-family: inherit;
+        }
+
+        .btn:hover { background: var(--color-bg-secondary); }
+        .btn:active { transform: scale(0.98); }
+
+        .reference {
+            background: var(--color-bg);
+            border: none;
+            border-radius: 12px;
+            padding: 1.25rem;
+            margin-top: 2rem;
+        }
+
+        .reference h2 { font-size: 16px; font-weight: 500; margin-bottom: 1rem; }
+
+        .reference table { width: 100%; font-size: 13px; border-collapse: collapse; }
+
+        .reference th {
+            text-align: left;
+            padding: 8px 12px;
+            font-weight: 500;
+            border-bottom: 0.5px solid var(--color-border);
+            color: var(--color-text-secondary);
+        }
+
+        .reference td {
+            padding: 12px;
+            border-bottom: 0.5px solid var(--color-border);
+            vertical-align: top;
+        }
+
+        .reference tr:last-child td { border-bottom: none; }
+
+        .sp-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-weight: 500;
+            font-size: 12px;
+            background: var(--color-bg-secondary);
+        }
+
+        input[type="range"] {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 4px;
+            border-radius: 2px;
+            background: var(--color-bg-secondary);
+            outline: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--color-accent);
+            cursor: pointer;
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--color-accent);
+            cursor: pointer;
+            border: none;
+        }
+
+        input[type="checkbox"],
+        input[type="radio"] {
+            accent-color: var(--color-accent);
+        }
+
+        .stepper-wrap {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .stepper-btn {
+            width: 36px;
+            height: 36px;
+            border: none;
+            border-radius: 8px;
+            background: var(--color-bg-secondary);
+            font-size: 20px;
+            line-height: 1;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--color-text);
+            font-family: inherit;
+            transition: background 0.15s;
+            flex-shrink: 0;
+        }
+
+        .stepper-btn:hover { background: #e8e8e8; }
+        .stepper-btn:active { transform: scale(0.95); }
+
+        .stepper-val {
+            font-size: 20px;
+            font-weight: 500;
+            min-width: 28px;
+            text-align: center;
+        }
+
+        @media (max-width: 600px) {
+            body { padding: 1rem 0.75rem; }
+            h1 { font-size: 24px; }
+            .sp-result { font-size: 48px; }
+            .actions { flex-direction: column; }
+            .btn { width: 100%; }
+            .nav-tabs { flex-direction: column; gap: 6px; }
+            .nav-tab { padding: 10px 12px; font-size: 13px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="nav-tabs">
+                <button class="nav-tab active" onclick="switchPage('process')">Оценка по процессу</button>
+                <button class="nav-tab" onclick="switchPage('guide')">Справка</button>
+            </div>
+            <h1 id="page-title">Оценка по процессу</h1>
+            <p class="subtitle" id="page-subtitle">Пятиэтапная методология для дизайн-задач</p>
+        </header>
+
+        <div id="process-page" class="page active">
+            <div style="background: var(--color-bg); border-radius: 12px; padding: 1rem; margin-bottom: 1.5rem; text-align: center;">
+                <div style="font-size: 13px; color: var(--color-text-secondary); margin-bottom: 0.5rem;">Итого по задаче</div>
+                <div style="font-size: 48px; font-weight: 500; color: var(--color-text);" id="process-total">0 SP</div>
+            </div>
+
+            <div class="factor-group">
+                <label style="display: flex; align-items: flex-start; gap: 12px; cursor: pointer; padding: 12px; border-radius: 8px; transition: background 0.15s;" onmouseover="this.style.background='var(--color-bg-secondary)'" onmouseout="this.style.background='transparent'">
+                    <input type="checkbox" id="stage-research" onchange="calculateProcess()" style="margin-top: 4px; width: 18px; height: 18px; cursor: pointer;">
+                    <div style="flex: 1;">
+                        <div style="font-size: 15px; font-weight: 500; margin-bottom: 4px;">Research / уточнение / декомпозиция — <span style="color: var(--color-text-secondary);">до 1 SP</span></div>
+                        <div style="font-size: 13px; color: var(--color-text-secondary); line-height: 1.6;">
+                            Исследование задачи, уточнение требований, декомпозиция, построение основного сценария, схема или flow ключевого пути.
+                        </div>
+                    </div>
+                </label>
+            </div>
+
+            <div class="factor-group">
+                <label style="display: flex; align-items: flex-start; gap: 12px; cursor: pointer; padding: 12px; border-radius: 8px; transition: background 0.15s;" onmouseover="this.style.background='var(--color-bg-secondary)'" onmouseout="this.style.background='transparent'">
+                    <input type="checkbox" id="stage-draft" onchange="calculateProcess()" style="margin-top: 4px; width: 18px; height: 18px; cursor: pointer;">
+                    <div style="flex: 1;">
+                        <div style="font-size: 15px; font-weight: 500; margin-bottom: 4px;">Draft / черновой макет — <span style="color: var(--color-text-secondary);">~3 SP</span></div>
+                        <div style="font-size: 13px; color: var(--color-text-secondary); line-height: 1.6;">
+                            Быстрая визуализация решения, проверка логики и UX-гипотез. Грубый макет (вручную или с AI), corridor testing при необходимости.
+                        </div>
+                    </div>
+                </label>
+            </div>
+
+            <div id="epic-decision" style="display: none; margin-bottom: 1rem; padding: 1.25rem; background: var(--color-amber-light); border-radius: 12px;">
+                <div style="font-size: 15px; font-weight: 500; margin-bottom: 1rem; color: var(--color-amber-dark);">После Research стало понятно:</div>
+                
+                <label style="display: flex; align-items: center; gap: 12px; cursor: pointer; padding: 12px; background: var(--color-bg); border-radius: 8px; margin-bottom: 8px;">
+                    <input type="radio" name="epic-type" value="simple" onchange="handleEpicDecision()" style="width: 18px; height: 18px; cursor: pointer;">
+                    <div style="font-size: 14px; color: var(--color-text);">
+                        <strong>Это задача</strong> — продолжаем по процессу
+                    </div>
+                </label>
+                
+                <label style="display: flex; align-items: center; gap: 12px; cursor: pointer; padding: 12px; background: var(--color-bg); border-radius: 8px;">
+                    <input type="radio" name="epic-type" value="epic" onchange="handleEpicDecision()" style="width: 18px; height: 18px; cursor: pointer;">
+                    <div style="font-size: 14px; color: var(--color-text);">
+                        <strong>Это эпик</strong> — нужна декомпозиция на подзадачи
+                    </div>
+                </label>
+            </div>
+
+            <div id="simple-flow" style="display: none;">
+                <div class="factor-group">
+                    <label style="display: flex; align-items: flex-start; gap: 12px; cursor: pointer; padding: 12px; border-radius: 8px; transition: background 0.15s;" onmouseover="this.style.background='var(--color-bg-secondary)'" onmouseout="this.style.background='transparent'">
+                        <input type="checkbox" id="stage-mainflow" onchange="calculateProcess()" style="margin-top: 4px; width: 18px; height: 18px; cursor: pointer;">
+                        <div style="flex: 1;">
+                            <div style="font-size: 15px; font-weight: 500; margin-bottom: 4px;">Основной макет (Main Flow) — <span style="color: var(--color-text-secondary);">1-8 SP</span></div>
+                            <div style="font-size: 13px; color: var(--color-text-secondary); line-height: 1.6;">
+                                Детальная проработка main flow, дизайн ключевого куска. Финальный макет основного пользовательского сценария.
+                            </div>
+                            <div style="margin-top: 8px;">
+                                <input type="range" id="mainflow-sp" min="1" max="8" value="5" onchange="updateMainFlowSP()" style="width: 100%;">
+                                <div style="font-size: 13px; color: var(--color-text-secondary); margin-top: 4px;">
+                                    <span id="mainflow-sp-value">5</span> SP
+                                </div>
+                            </div>
+                        </div>
+                    </label>
+                </div>
+
+                <div class="factor-group">
+                    <label style="display: flex; align-items: flex-start; gap: 12px; cursor: pointer; padding: 12px; border-radius: 8px; transition: background 0.15s;" onmouseover="this.style.background='var(--color-bg-secondary)'" onmouseout="this.style.background='transparent'">
+                        <input type="checkbox" id="stage-prep" onchange="calculateProcess()" style="margin-top: 4px; width: 18px; height: 18px; cursor: pointer;">
+                        <div style="flex: 1;">
+                            <div style="font-size: 15px; font-weight: 500; margin-bottom: 4px;">Подготовка к разработке — <span style="color: var(--color-text-secondary);">~2 SP</span></div>
+                            <div style="font-size: 13px; color: var(--color-text-secondary); line-height: 1.6;">
+                                Проработка corner cases, спецификация, подготовка состояний и деталей интерфейса. Полный комплект материалов для разработки.
+                            </div>
+                        </div>
+                    </label>
+                </div>
+
+                <div class="factor-group">
+                    <label style="display: flex; align-items: flex-start; gap: 12px; cursor: pointer; padding: 12px; border-radius: 8px; transition: background 0.15s;" onmouseover="this.style.background='var(--color-bg-secondary)'" onmouseout="this.style.background='transparent'">
+                        <input type="checkbox" id="stage-review" onchange="calculateProcess()" style="margin-top: 4px; width: 18px; height: 18px; cursor: pointer;">
+                        <div style="flex: 1;">
+                            <div style="font-size: 15px; font-weight: 500; margin-bottom: 4px;">Design Review — <span style="color: var(--color-text-secondary);">0.5 SP</span></div>
+                            <div style="font-size: 13px; color: var(--color-text-secondary); line-height: 1.6;">
+                                Проверка соответствия реализации макетам, фиксация проблем и расхождений, рекомендации по доработке.
+                            </div>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <div id="epic-flow" style="display: none;">
+                <div style="background: var(--color-bg); border: 0.5px solid var(--color-border); border-radius: 12px; padding: 1.25rem; margin-bottom: 1rem;">
+                    <div style="font-size: 15px; font-weight: 500; margin-bottom: 1rem;">Декомпозиция эпика</div>
+                    
+                    <div style="font-size: 14px; line-height: 1.7; color: var(--color-text-secondary); margin-bottom: 1.5rem;">
+                        Research и Draft сделаны один раз для всего эпика. Теперь дроби работу над Main Flow на отдельные задачи. Каждая подзадача включает: Main Flow (5-8 SP) + Подготовка (2 SP) + Review (0.5 SP).
+                    </div>
+
+                    <div style="margin-bottom: 1rem;">
+                        <label style="font-size: 14px; font-weight: 500; margin-bottom: 12px; display: block;">На сколько подзадач дробить?</label>
+                        <div class="stepper-wrap">
+                            <button class="stepper-btn" onclick="changeEpicParts(-1)">−</button>
+                            <span class="stepper-val" id="epic-parts-val">2</span>
+                            <button class="stepper-btn" onclick="changeEpicParts(1)">+</button>
+                            <input type="range" min="2" max="5" value="2" id="epic-parts" oninput="syncEpicPartsFromSlider()" style="flex: 1;">
+                        </div>
+                    </div>
+
+                    <div id="mainflow-parts-container" style="margin-bottom: 1.5rem;"></div>
+
+                    <div id="epic-tasks-list"></div>
+                </div>
+            </div>
+
+            <div id="process-warning" style="display: none; margin-top: 1.5rem; padding: 1rem; background: var(--color-amber-light); color: var(--color-amber-dark); border-radius: 8px; font-size: 14px; line-height: 1.6;"></div>
+
+            <div class="actions">
+                <button class="btn" onclick="resetProcess()">
+                    <i class="ti ti-refresh"></i> Сбросить
+                </button>
+            </div>
+
+        </div>
+
+        <div id="guide-page" class="page">
+            <div style="background: var(--color-bg-secondary); border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem;">
+                <h2 style="font-size: 16px; font-weight: 500; margin-bottom: 0.75rem;">Для вашей команды</h2>
+                <div style="font-size: 14px; line-height: 1.7;">
+                    <p style="margin-bottom: 0.5rem;"><strong>1 SP ≈ 4-5 часов работы (полдня-день)</strong></p>
+                    <p style="margin-bottom: 0.5rem;">Capacity: <strong>8 SP на человека в неделю</strong></p>
+                    <p style="margin-bottom: 0.5rem;">Команда из 2 дизайнеров = <strong>16 SP на спринт</strong></p>
+                    <p style="margin: 0;"><strong>8 SP = 5 рабочих дней = вся неделя</strong></p>
+                </div>
+            </div>
+
+            <div class="factor-group">
+                <h2 style="font-size: 18px; font-weight: 500; margin-bottom: 1rem;">Как работает процесс оценки</h2>
+                <p style="font-size: 14px; line-height: 1.7; color: var(--color-text-secondary); margin-bottom: 1rem;">
+                    Оценка идёт по пятиэтапному процессу. После Research становится понятно — это задача или эпик.
+                </p>
+                <div style="background: var(--color-bg-secondary); padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                    <p style="font-size: 14px; margin-bottom: 0.5rem;"><strong>1. Research</strong> — до 1 SP</p>
+                    <p style="font-size: 13px; color: var(--color-text-secondary); margin-bottom: 1rem;">Уточнение требований, построение сценария, декомпозиция.</p>
+
+                    <p style="font-size: 14px; margin-bottom: 0.5rem;"><strong>↓ После Research: задача или эпик?</strong></p>
+                    <p style="font-size: 13px; color: var(--color-text-secondary); margin-bottom: 1rem;">Если эпик — дробишь на подзадачи. Каждая подзадача проходит этапы 3-5 отдельно.</p>
+
+                    <p style="font-size: 14px; margin-bottom: 0.5rem;"><strong>2. Draft</strong> — ~3 SP</p>
+                    <p style="font-size: 13px; color: var(--color-text-secondary); margin-bottom: 1rem;">Черновой макет по всему эпику или задаче, проверка гипотез.</p>
+
+                    <p style="font-size: 14px; margin-bottom: 0.5rem;"><strong>3. Main Flow</strong> — 1-8 SP</p>
+                    <p style="font-size: 13px; color: var(--color-text-secondary); margin-bottom: 1rem;">Финальный макет основного сценария. Для эпика — отдельная задача на каждую часть.</p>
+
+                    <p style="font-size: 14px; margin-bottom: 0.5rem;"><strong>4. Подготовка к разработке</strong> — ~2 SP</p>
+                    <p style="font-size: 13px; color: var(--color-text-secondary); margin-bottom: 1rem;">Corner cases, спецификация, состояния интерфейса.</p>
+
+                    <p style="font-size: 14px; margin-bottom: 0.5rem;"><strong>5. Design Review</strong> — 0.5 SP</p>
+                    <p style="font-size: 13px; color: var(--color-text-secondary); margin: 0;">Проверка соответствия реализации макетам.</p>
+                </div>
+                <p style="font-size: 14px; line-height: 1.7; color: var(--color-text);">
+                    Вкладка <strong>Быстрая оценка</strong> — для нетипичных задач и фиксов, которые не вписываются в процесс.
+                </p>
+            </div>
+
+            <div class="factor-group">
+                <h2 style="font-size: 18px; font-weight: 500; margin-bottom: 1rem;">Best practices</h2>
+                <div style="font-size: 14px; line-height: 1.7;">
+                    <p style="margin-bottom: 1rem;"><strong>Калибровка под недельный спринт</strong></p>
+                    <p style="font-size: 13px; color: var(--color-text-secondary); margin-bottom: 1rem;">
+                        При capacity 8 SP на человека, недельный спринт вмещает 16 SP на команду из двух дизайнеров. 8 SP = 5 рабочих дней. Любая задача > 5 SP съедает больше половины недели — подумайте о дроблении.
+                    </p>
+
+                    <p style="margin-bottom: 1rem;"><strong>Используйте эталонную задачу</strong></p>
+                    <p style="font-size: 13px; color: var(--color-text-secondary); margin-bottom: 1rem;">
+                        Выберите задачу, которую вся команда понимает как «среднюю» (например, на 3 SP ≈ 2 дня работы), и оценивайте всё остальное относительно неё.
+                    </p>
+
+                    <p style="margin-bottom: 1rem;"><strong>Включайте время на коммуникацию</strong></p>
+                    <p style="font-size: 13px; color: var(--color-text-secondary); margin-bottom: 1rem;">
+                        В SP должна входить не только «отрисовка», но и время на обсуждение с менеджерами и передачу макетов в разработку.
+                    </p>
+
+                    <p style="margin-bottom: 1rem;"><strong>Не переводите SP в часы напрямую</strong></p>
+                    <p style="font-size: 13px; color: var(--color-text-secondary); margin-bottom: 1rem;">
+                        1 SP ≈ 4-5 часов работы с учётом всего (митинги, правки, коммуникация). Основная цель SP — предсказать объем, который команда может «переварить» за спринт (Velocity).
+                    </p>
+
+                    <p style="margin-bottom: 1rem;"><strong>Дробите задачи на 8+ SP</strong></p>
+                    <p style="font-size: 13px; color: var(--color-text-secondary);">
+                        Если задача оценивается в 8 SP — она съедает всю неделю одного дизайнера. Задачи в 13+ SP вообще не влезают в недельный спринт. Дробите обязательно.
+                    </p>
+                </div>
+            </div>
+
+            <div class="factor-group">
+                <h2 style="font-size: 18px; font-weight: 500; margin-bottom: 1rem;">Примеры оценки</h2>
+                
+                <div style="background: var(--color-bg-secondary); padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                    <p style="font-size: 14px; font-weight: 500; margin-bottom: 0.5rem;">Правка иконок → 1 SP (~полдня)</p>
+                    <p style="font-size: 13px; color: var(--color-text-secondary); line-height: 1.6;">
+                        Только Draft (0.5-1 SP). Research не нужен — задача понятна сразу.
+                    </p>
+                </div>
+
+                <div style="background: var(--color-bg-secondary); padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                    <p style="font-size: 14px; font-weight: 500; margin-bottom: 0.5rem;">Форма регистрации → 5.5 SP (~3 дня)</p>
+                    <p style="font-size: 13px; color: var(--color-text-secondary); line-height: 1.6;">
+                        Research (1) + Draft (3) + Подготовка (2) = 6 SP. Main Flow не отдельный — задача простая.
+                    </p>
+                </div>
+
+                <div style="background: var(--color-bg-secondary); padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                    <p style="font-size: 14px; font-weight: 500; margin-bottom: 0.5rem;">Корзина с состояниями → 8.5 SP (~вся неделя)</p>
+                    <p style="font-size: 13px; color: var(--color-text-secondary); line-height: 1.6;">
+                        Research (1) + Draft (3) + Main Flow (3) + Подготовка (2) + Review (0.5) = 9.5 SP → на границе, возможно стоит дробить.
+                    </p>
+                </div>
+
+                <div style="background: var(--color-bg-secondary); padding: 1rem; border-radius: 8px;">
+                    <p style="font-size: 14px; font-weight: 500; margin-bottom: 0.5rem;">Редизайн раздела → эпик, 3+ недели</p>
+                    <p style="font-size: 13px; color: var(--color-text-secondary); line-height: 1.6;">
+                        Research (1) + Draft (3) = 4 SP — это первая задача.<br>
+                        Затем 3-4 подзадачи: Main Flow часть N (5-8) + Подготовка (2) + Review (0.5) каждая.
+                    </p>
+                </div>
+            </div>
+
+            <div class="factor-group">
+                <h2 style="font-size: 18px; font-weight: 500; margin-bottom: 1rem;">Как дробить эпики</h2>
+                <p style="font-size: 14px; color: var(--color-text-secondary); margin-bottom: 1rem; line-height: 1.7;">Дробить Main Flow удобно по одному из принципов:</p>
+                
+                <div style="background: var(--color-bg-secondary); padding: 1rem; border-radius: 8px; margin-bottom: 0.75rem;">
+                    <p style="font-weight: 500; margin-bottom: 0.25rem;">По функционалу</p>
+                    <p style="font-size: 13px; color: var(--color-text-secondary);">Happy path → Edge cases → Пустые состояния → Ошибки</p>
+                </div>
+
+                <div style="background: var(--color-bg-secondary); padding: 1rem; border-radius: 8px; margin-bottom: 0.75rem;">
+                    <p style="font-weight: 500; margin-bottom: 0.25rem;">По экранам</p>
+                    <p style="font-size: 13px; color: var(--color-text-secondary);">Главный экран → Детальная страница → Форма создания</p>
+                </div>
+
+                <div style="background: var(--color-bg-secondary); padding: 1rem; border-radius: 8px;">
+                    <p style="font-weight: 500; margin-bottom: 0.25rem;">По платформам</p>
+                    <p style="font-size: 13px; color: var(--color-text-secondary);">Desktop → Mobile → Tablet</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const state = {
+            volume: null,
+            complexity: null,
+            iterations: null
+        };
+
+        function changeEpicParts(delta) {
+            const slider = document.getElementById('epic-parts');
+            const val = Math.min(5, Math.max(2, parseInt(slider.value) + delta));
+            slider.value = val;
+            document.getElementById('epic-parts-val').textContent = val;
+            updateMainFlowParts();
+        }
+
+        function syncEpicPartsFromSlider() {
+            const val = document.getElementById('epic-parts').value;
+            document.getElementById('epic-parts-val').textContent = val;
+            updateMainFlowParts();
+        }
+
+        function switchPage(page) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+            
+            if (page === 'process') {
+                document.getElementById('process-page').classList.add('active');
+                document.querySelectorAll('.nav-tab')[0].classList.add('active');
+                document.getElementById('page-title').textContent = 'Оценка по процессу';
+                document.getElementById('page-subtitle').textContent = 'Пятиэтапная методология для дизайн-задач';
+            } else if (page === 'guide') {
+                document.getElementById('guide-page').classList.add('active');
+                document.querySelectorAll('.nav-tab')[1].classList.add('active');
+                document.getElementById('page-title').textContent = 'Справка';
+                document.getElementById('page-subtitle').textContent = 'Методология и best practices';
+            }
+        }
+
+        function calculateProcess() {
+            const research = document.getElementById('stage-research').checked;
+            
+            if (research) {
+                document.getElementById('epic-decision').style.display = 'block';
+            } else {
+                document.getElementById('epic-decision').style.display = 'none';
+                document.getElementById('simple-flow').style.display = 'none';
+                document.getElementById('epic-flow').style.display = 'none';
+                document.querySelectorAll('input[name="epic-type"]').forEach(r => r.checked = false);
+            }
+            
+            updateTotal();
+        }
+
+        function handleEpicDecision() {
+            const decision = document.querySelector('input[name="epic-type"]:checked')?.value;
+            
+            if (decision === 'simple') {
+                document.getElementById('simple-flow').style.display = 'block';
+                document.getElementById('epic-flow').style.display = 'none';
+            } else if (decision === 'epic') {
+                document.getElementById('simple-flow').style.display = 'none';
+                document.getElementById('epic-flow').style.display = 'block';
+                updateMainFlowParts();
+            }
+            
+            updateTotal();
+        }
+
+        function updateMainFlowParts() {
+            const parts = parseInt(document.getElementById('epic-parts').value) || 2;
+            const container = document.getElementById('mainflow-parts-container');
+            
+            let html = '';
+            
+            for (let i = 1; i <= parts; i++) {
+                html += `
+                    <div style="margin-bottom: 16px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                            <label style="font-size: 14px; font-weight: 500;">Подзадача ${i}</label>
+                            <span style="font-size: 14px; color: var(--color-text-secondary);"><span id="mainflow-val-${i}">8</span> SP</span>
+                        </div>
+                        <input type="range" min="1" max="8" value="8" id="mainflow-part-${i}" oninput="document.getElementById('mainflow-val-${i}').textContent=this.value; generateEpicTasks();" style="width: 100%;">
+                    </div>
+                `;
+            }
+            
+            container.innerHTML = html;
+            generateEpicTasks();
+        }
+
+        function generateEpicTasks() {
+            const parts = parseInt(document.getElementById('epic-parts').value) || 2;
+            const research = document.getElementById('stage-research').checked ? 1 : 0;
+            const draft = document.getElementById('stage-draft').checked ? 3 : 0;
+            
+            let totalSP = research + draft;
+            
+            for (let i = 1; i <= parts; i++) {
+                const mainflowSP = parseInt(document.getElementById(`mainflow-part-${i}`)?.value) || 8;
+                totalSP += mainflowSP + 2 + 0.5;
+            }
+            
+            const weeks = Math.ceil(totalSP / 16);
+            const taskCount = (research || draft) ? parts + 1 : parts;
+            
+            document.getElementById('epic-tasks-list').innerHTML = `
+                <div style="padding: 12px; background: var(--color-bg-secondary); border-radius: 8px; font-size: 14px;">
+                    <strong>Итого эпик:</strong> ${totalSP} SP · ${taskCount} ${taskCount < 5 ? 'задачи' : 'задач'} · ≈${weeks} ${weeks === 1 ? 'неделя' : weeks < 5 ? 'недели' : 'недель'} для команды из 2 человек
+                </div>
+            `;
+            
+            document.getElementById('process-total').textContent = totalSP + ' SP';
+            document.getElementById('process-warning').style.display = 'none';
+        }
+
+        function updateMainFlowSP() {
+            const value = document.getElementById('mainflow-sp').value;
+            document.getElementById('mainflow-sp-value').textContent = value;
+            updateTotal();
+        }
+
+        function updateTotal() {
+            const decision = document.querySelector('input[name="epic-type"]:checked')?.value;
+            
+            if (decision === 'epic') {
+                // Для эпика считаем в generateEpicTasks
+                return;
+            }
+            
+            const research = document.getElementById('stage-research').checked ? 1 : 0;
+            const draft = document.getElementById('stage-draft').checked ? 3 : 0;
+            const mainflow = document.getElementById('stage-mainflow')?.checked ? parseInt(document.getElementById('mainflow-sp')?.value || 5) : 0;
+            const prep = document.getElementById('stage-prep')?.checked ? 2 : 0;
+            const review = document.getElementById('stage-review')?.checked ? 0.5 : 0;
+            
+            const total = research + draft + mainflow + prep + review;
+            
+            document.getElementById('process-total').textContent = total + ' SP';
+            
+            const warningEl = document.getElementById('process-warning');
+            
+            if (total > 8) {
+                warningEl.style.display = 'block';
+                warningEl.innerHTML = '<strong>⚠️ Задача больше 8 SP</strong><br>Эта задача не влезет в одну неделю. Раздроби её на несколько отдельных задач по этапам.';
+            } else if (total === 0) {
+                warningEl.style.display = 'none';
+            } else if (total > 5) {
+                warningEl.style.display = 'block';
+                warningEl.innerHTML = '<strong>Задача на ' + total + ' SP</strong><br>Это больше половины недели. Если в спринте есть другие задачи, подумай о дроблении.';
+            } else {
+                warningEl.style.display = 'none';
+            }
+        }
+
+        function resetProcess() {
+            document.getElementById('stage-research').checked = false;
+            document.getElementById('stage-draft').checked = false;
+            if (document.getElementById('stage-mainflow')) {
+                document.getElementById('stage-mainflow').checked = false;
+            }
+            if (document.getElementById('stage-prep')) {
+                document.getElementById('stage-prep').checked = false;
+            }
+            if (document.getElementById('stage-review')) {
+                document.getElementById('stage-review').checked = false;
+            }
+            document.getElementById('epic-decision').style.display = 'none';
+            document.getElementById('simple-flow').style.display = 'none';
+            document.getElementById('epic-flow').style.display = 'none';
+            document.querySelectorAll('input[name="epic-type"]').forEach(r => r.checked = false);
+            document.getElementById('process-total').textContent = '0 SP';
+            document.getElementById('process-warning').style.display = 'none';
+        }
+
+        function selectOption(factor, value, btn) {
+            state[factor] = value;
+            
+            const group = btn.parentElement;
+            group.querySelectorAll('.option-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            
+            calculate();
+        }
+
+        function calculate() {
+            if (state.volume === null || state.complexity === null || state.iterations === null) {
+                document.getElementById('result').style.display = 'none';
+                return;
+            }
+            
+            const total = state.volume + state.complexity + state.iterations;
+            
+            let sp, description, examples, warning = '';
+            
+            if (total <= 2) {
+                sp = 1;
+                description = 'Минорная правка или гигиена';
+                examples = 'Замена иконок, правка текста, обновление цвета кнопки, добавление одного состояния';
+            } else if (total <= 4) {
+                sp = 2;
+                description = 'Стандартная задача в рамках текущей системы';
+                examples = 'Простая форма, один новый экран по гайдам, типовой компонент';
+            } else if (total <= 6) {
+                sp = 3;
+                description = 'Средняя задача с проработкой';
+                examples = 'Несколько связанных экранов, новая логика с edge cases, адаптация паттерна под новый контекст';
+            } else if (total <= 8) {
+                sp = 5;
+                description = 'Сложная задача с проработкой логики';
+                examples = 'Новый функционал (корзина, чекаут), полный флоу с разными сценариями, редизайн раздела';
+            } else if (total <= 11) {
+                sp = 8;
+                description = 'Исследовательская или комплексная задача';
+                examples = 'Полный редизайн раздела, создание дизайн-системы, UX-исследование + дизайн';
+                warning = '<div class="warning warning-medium"><strong>Внимание:</strong> Такая таска блокирует весь спринт. Подумай, можно ли дробить на этапы по 2-3 SP.</div>';
+            } else {
+                sp = 13;
+                description = 'Эпик — требует декомпозиции';
+                examples = 'Это не задача, а набор задач. Раздроби на этапы по 2-5 SP каждый.';
+                warning = '<div class="warning warning-high"><strong>Стоп!</strong> Такие таски не влезают в недельный спринт. Обязательно дроби на мелкие задачи.</div>';
+            }
+            
+            const resultEl = document.getElementById('result');
+            resultEl.innerHTML = `
+                <div class="sp-result">${sp} SP</div>
+                <div class="sp-label">${description}</div>
+                <div class="examples">${examples}</div>
+                ${warning}
+            `;
+            
+            resultEl.style.display = 'block';
+            resultEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function reset() {
+            state.volume = null;
+            state.complexity = null;
+            state.iterations = null;
+            
+            document.querySelectorAll('.option-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById('result').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
