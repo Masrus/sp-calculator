@@ -443,7 +443,7 @@
                     <label style="display: flex; align-items: flex-start; gap: 12px; cursor: pointer; padding: 12px; border-radius: 8px; transition: background 0.15s;" >
                         <input type="checkbox" id="stage-prep" onchange="calculateProcess()" style="margin-top: 4px; width: 18px; height: 18px; cursor: pointer;">
                         <div style="flex: 1;">
-                            <div style="font-size: 15px; font-weight: 500; margin-bottom: 4px;">Подготовка к разработке — <span style="color: var(--color-text-secondary);">~2 SP</span></div>
+                            <div style="font-size: 15px; font-weight: 500; margin-bottom: 4px;">Подготовка к разработке — <span style="color: var(--color-text-secondary);">~4 SP</span></div>
                             <div style="font-size: 13px; color: var(--color-text-secondary); line-height: 1.6;">
                                 Проработка corner cases, спецификация, подготовка состояний и деталей интерфейса. Полный комплект материалов для разработки.
                             </div>
@@ -553,10 +553,10 @@
                     <p style="font-size: 14px; margin-bottom: 0.5rem;"><strong>3. Main Flow</strong> — 2-16 SP</p>
                     <p style="font-size: 13px; color: var(--color-text-secondary); margin-bottom: 1rem;">Финальный макет основного сценария. Для эпика — отдельная задача на каждую часть.</p>
 
-                    <p style="font-size: 14px; margin-bottom: 0.5rem;"><strong>4. Подготовка к разработке</strong> — ~2 SP</p>
+                    <p style="font-size: 14px; margin-bottom: 0.5rem;"><strong>4. Подготовка к разработке</strong> — ~4 SP</p>
                     <p style="font-size: 13px; color: var(--color-text-secondary); margin-bottom: 1rem;">Corner cases, спецификация, состояния интерфейса.</p>
 
-                    <p style="font-size: 14px; margin-bottom: 0.5rem;"><strong>5. Design Review</strong> — 0.5 SP</p>
+                    <p style="font-size: 14px; margin-bottom: 0.5rem;"><strong>5. Design Review</strong> — 1 SP</p>
                     <p style="font-size: 13px; color: var(--color-text-secondary); margin: 0;">Проверка соответствия реализации макетам.</p>
                 </div>
                 <p style="font-size: 14px; line-height: 1.7; color: var(--color-text);">
@@ -569,7 +569,7 @@
                 <div style="font-size: 14px; line-height: 1.7;">
                     <p style="margin-bottom: 1rem;"><strong>Калибровка под недельный спринт</strong></p>
                     <p style="font-size: 13px; color: var(--color-text-secondary); margin-bottom: 1rem;">
-                        При capacity 8 SP на человека, недельный спринт вмещает 16 SP на команду из двух дизайнеров. 8 SP = 5 рабочих дней. Любая задача > 5 SP съедает больше половины недели — подумайте о дроблении.
+                        При capacity 16 SP на человека, недельный спринт вмещает 32 SP на команду из двух дизайнеров. 16 SP = 5 рабочих дней. Любая задача > 8 SP съедает больше половины недели — подумайте о дроблении.
                     </p>
 
                     <p style="margin-bottom: 1rem;"><strong>Используйте эталонную задачу</strong></p>
@@ -598,31 +598,31 @@
                 <h2 style="font-size: 18px; font-weight: 500; margin-bottom: 1rem;">Примеры оценки</h2>
                 
                 <div style="background: var(--color-bg-secondary); padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
-                    <p style="font-size: 14px; font-weight: 500; margin-bottom: 0.5rem;">Правка иконок → 1 SP (~полдня)</p>
+                    <p style="font-size: 14px; font-weight: 500; margin-bottom: 0.5rem;">Правка иконок → 2 SP (~полдня)</p>
                     <p style="font-size: 13px; color: var(--color-text-secondary); line-height: 1.6;">
-                        Только Draft (0.5-1 SP). Research не нужен — задача понятна сразу.
+                        Только Draft (1-2 SP). Research не нужен — задача понятна сразу.
                     </p>
                 </div>
 
                 <div style="background: var(--color-bg-secondary); padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
-                    <p style="font-size: 14px; font-weight: 500; margin-bottom: 0.5rem;">Форма регистрации → 5.5 SP (~3 дня)</p>
+                    <p style="font-size: 14px; font-weight: 500; margin-bottom: 0.5rem;">Форма регистрации → 12 SP (~3 дня)</p>
                     <p style="font-size: 13px; color: var(--color-text-secondary); line-height: 1.6;">
-                        Research (1) + Draft (3) + Подготовка (2) = 6 SP. Main Flow не отдельный — задача простая.
+                        Research (2) + Draft (6) + Подготовка (4) = 12 SP.
                     </p>
                 </div>
 
                 <div style="background: var(--color-bg-secondary); padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
-                    <p style="font-size: 14px; font-weight: 500; margin-bottom: 0.5rem;">Корзина с состояниями → 8.5 SP (~вся неделя)</p>
+                    <p style="font-size: 14px; font-weight: 500; margin-bottom: 0.5rem;">Корзина с состояниями → 19 SP (~вся неделя+)</p>
                     <p style="font-size: 13px; color: var(--color-text-secondary); line-height: 1.6;">
-                        Research (1) + Draft (3) + Main Flow (3) + Подготовка (2) + Review (0.5) = 9.5 SP → на границе, возможно стоит дробить.
+                        Research (2) + Draft (6) + Main Flow (6) + Подготовка (4) + Review (1) = 19 SP → стоит дробить.
                     </p>
                 </div>
 
                 <div style="background: var(--color-bg-secondary); padding: 1rem; border-radius: 8px;">
                     <p style="font-size: 14px; font-weight: 500; margin-bottom: 0.5rem;">Редизайн раздела → эпик, 3+ недели</p>
                     <p style="font-size: 13px; color: var(--color-text-secondary); line-height: 1.6;">
-                        Research (1) + Draft (3) = 4 SP — это первая задача.<br>
-                        Затем 3-4 подзадачи: Main Flow часть N (5-8) + Подготовка (2) + Review (0.5) каждая.
+                        Research (2) + Draft (6) = 8 SP — это первая задача.<br>
+                        Затем 3-4 подзадачи: Main Flow часть N (10-16) + Подготовка (4) + Review (1) каждая.
                     </p>
                 </div>
             </div>
