@@ -374,8 +374,8 @@
             </div>
 
             <div class="factor-group">
-                <label style="display: flex; align-items: flex-start; gap: 12px; cursor: pointer; padding: 12px; border-radius: 8px; transition: background 0.15s;" >
-                    <input type="checkbox" id="stage-research" onchange="calculateProcess()" style="margin-top: 4px; width: 18px; height: 18px; cursor: pointer;">
+                <label style="display: flex; align-items: flex-start; gap: 12px; cursor: pointer; padding: 12px; border-radius: 8px;">
+                    <input type="checkbox" id="stage-research" onchange="updateTotal()" style="margin-top: 4px; width: 18px; height: 18px; cursor: pointer;">
                     <div style="flex: 1;">
                         <div style="font-size: 15px; font-weight: 500; margin-bottom: 4px;">Research / уточнение / декомпозиция — <span style="color: var(--color-text-secondary);">до 2 SP</span></div>
                         <div style="font-size: 13px; color: var(--color-text-secondary); line-height: 1.6;">
@@ -385,137 +385,71 @@
                 </label>
             </div>
 
-            <div id="epic-decision" style="display: none; margin-bottom: 1rem; padding: 1.25rem; background: var(--color-amber-light); border-radius: 12px;">
-                <div style="font-size: 15px; font-weight: 500; margin-bottom: 1rem; color: var(--color-amber-dark);">После Research стало понятно:</div>
-                
-                <label style="display: flex; align-items: center; gap: 12px; cursor: pointer; padding: 12px; background: var(--color-bg); border-radius: 8px; margin-bottom: 8px;">
-                    <input type="radio" name="epic-type" value="simple" onchange="handleEpicDecision()" style="width: 18px; height: 18px; cursor: pointer;">
-                    <div style="font-size: 14px; color: var(--color-text);">
-                        <strong>Это задача</strong> — продолжаем по процессу
-                    </div>
-                </label>
-                
-                <label style="display: flex; align-items: center; gap: 12px; cursor: pointer; padding: 12px; background: var(--color-bg); border-radius: 8px;">
-                    <input type="radio" name="epic-type" value="epic" onchange="handleEpicDecision()" style="width: 18px; height: 18px; cursor: pointer;">
-                    <div style="font-size: 14px; color: var(--color-text);">
-                        <strong>Это эпик</strong> — нужна декомпозиция на подзадачи
+            <div class="factor-group">
+                <label style="display: flex; align-items: flex-start; gap: 12px; cursor: pointer; padding: 12px; border-radius: 8px;">
+                    <input type="checkbox" id="stage-draft" onchange="updateTotal()" style="margin-top: 4px; width: 18px; height: 18px; cursor: pointer;">
+                    <div style="flex: 1;">
+                        <div style="font-size: 15px; font-weight: 500; margin-bottom: 4px;">Draft / черновой макет — <span style="color: var(--color-text-secondary);">~6 SP</span></div>
+                        <div style="font-size: 13px; color: var(--color-text-secondary); line-height: 1.6;">
+                            Быстрая визуализация решения, проверка логики и UX-гипотез. Грубый макет (вручную или с AI), corridor testing при необходимости.
+                        </div>
                     </div>
                 </label>
             </div>
 
-            <div id="simple-flow" style="display: none;">
-                <div class="factor-group">
-                    <label style="display: flex; align-items: flex-start; gap: 12px; cursor: pointer; padding: 12px; border-radius: 8px;">
-                        <input type="checkbox" id="stage-draft" onchange="updateTotal()" style="margin-top: 4px; width: 18px; height: 18px; cursor: pointer;">
-                        <div style="flex: 1;">
-                            <div style="font-size: 15px; font-weight: 500; margin-bottom: 4px;">Draft / черновой макет — <span style="color: var(--color-text-secondary);">~6 SP</span></div>
-                            <div style="font-size: 13px; color: var(--color-text-secondary); line-height: 1.6;">
-                                Быстрая визуализация решения, проверка логики и UX-гипотез. Грубый макет (вручную или с AI), corridor testing при необходимости.
-                            </div>
+            <div class="factor-group">
+                <label style="display: flex; align-items: flex-start; gap: 12px; cursor: pointer; padding: 12px; border-radius: 8px;">
+                    <input type="checkbox" id="stage-mainflow" onchange="updateTotal()" style="margin-top: 4px; width: 18px; height: 18px; cursor: pointer;">
+                    <div style="flex: 1;">
+                        <div style="font-size: 15px; font-weight: 500; margin-bottom: 4px;">Основной макет (Main Flow) — <span style="color: var(--color-text-secondary);">2-16 SP</span></div>
+                        <div style="font-size: 13px; color: var(--color-text-secondary); line-height: 1.6;">
+                            Детальная проработка main flow, дизайн ключевого куска. Финальный макет основного пользовательского сценария.
                         </div>
-                    </label>
-                </div>
-                <div class="factor-group">
-                    <label style="display: flex; align-items: flex-start; gap: 12px; cursor: pointer; padding: 12px; border-radius: 8px; transition: background 0.15s;" >
-                        <input type="checkbox" id="stage-mainflow" onchange="calculateProcess()" style="margin-top: 4px; width: 18px; height: 18px; cursor: pointer;">
-                        <div style="flex: 1;">
-                            <div style="font-size: 15px; font-weight: 500; margin-bottom: 4px;">Основной макет (Main Flow) — <span style="color: var(--color-text-secondary);">2-16 SP</span></div>
-                            <div style="font-size: 13px; color: var(--color-text-secondary); line-height: 1.6;">
-                                Детальная проработка main flow, дизайн ключевого куска. Финальный макет основного пользовательского сценария.
+                        <div style="margin-top: 12px;">
+                            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
+                                <input type="range" id="mainflow-sp" min="2" max="16" value="10" oninput="updateMainFlowSP()" style="flex: 1; accent-color: var(--color-accent);">
+                                <span style="font-size: 15px; font-weight: 500; min-width: 40px; text-align: right;"><span id="mainflow-sp-value">10</span> SP</span>
                             </div>
-                            <div style="margin-top: 12px;">
-                                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
-                                    <input type="range" id="mainflow-sp" min="2" max="16" value="10" oninput="updateMainFlowSP()" style="flex: 1; accent-color: var(--color-accent);">
-                                    <span style="font-size: 15px; font-weight: 500; min-width: 40px; text-align: right;"><span id="mainflow-sp-value">10</span> SP</span>
-                                </div>
-                                <div style="display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px;">
-                                    <button onclick="setMainFlowSP(2)" style="font-size: 12px; padding: 5px 10px; border-radius: 20px; border: 1px solid var(--color-border); background: #fff; cursor: pointer; color: var(--color-text-secondary); font-family: inherit;">Правка иконок — 2 SP</button>
-                                    <button onclick="setMainFlowSP(6)" style="font-size: 12px; padding: 5px 10px; border-radius: 20px; border: 1px solid var(--color-border); background: #fff; cursor: pointer; color: var(--color-text-secondary); font-family: inherit;">Форма регистрации — 6 SP</button>
-                                    <button onclick="setMainFlowSP(10)" style="font-size: 12px; padding: 5px 10px; border-radius: 20px; border: 1px solid var(--color-border); background: #fff; cursor: pointer; color: var(--color-text-secondary); font-family: inherit;">Корзина с состояниями — 10 SP</button>
-                                    <button onclick="setMainFlowSP(16)" style="font-size: 12px; padding: 5px 10px; border-radius: 20px; border: 1px solid var(--color-border); background: #fff; cursor: pointer; color: var(--color-text-secondary); font-family: inherit;">Редизайн раздела — 16 SP</button>
-                                </div>
+                            <div style="display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px;">
+                                <button onclick="setMainFlowSP(2)" style="font-size: 12px; padding: 5px 10px; border-radius: 20px; border: 1px solid var(--color-border); background: #fff; cursor: pointer; color: var(--color-text-secondary); font-family: inherit;">Правка иконок — 2 SP</button>
+                                <button onclick="setMainFlowSP(6)" style="font-size: 12px; padding: 5px 10px; border-radius: 20px; border: 1px solid var(--color-border); background: #fff; cursor: pointer; color: var(--color-text-secondary); font-family: inherit;">Форма регистрации — 6 SP</button>
+                                <button onclick="setMainFlowSP(10)" style="font-size: 12px; padding: 5px 10px; border-radius: 20px; border: 1px solid var(--color-border); background: #fff; cursor: pointer; color: var(--color-text-secondary); font-family: inherit;">Корзина с состояниями — 10 SP</button>
+                                <button onclick="setMainFlowSP(16)" style="font-size: 12px; padding: 5px 10px; border-radius: 20px; border: 1px solid var(--color-border); background: #fff; cursor: pointer; color: var(--color-text-secondary); font-family: inherit;">Редизайн раздела — 16 SP</button>
                             </div>
-                        </div>
-                    </label>
-                </div>
-
-                <div class="factor-group">
-                    <label style="display: flex; align-items: flex-start; gap: 12px; cursor: pointer; padding: 12px; border-radius: 8px; transition: background 0.15s;" >
-                        <input type="checkbox" id="stage-prep" onchange="calculateProcess()" style="margin-top: 4px; width: 18px; height: 18px; cursor: pointer;">
-                        <div style="flex: 1;">
-                            <div style="font-size: 15px; font-weight: 500; margin-bottom: 4px;">Подготовка к разработке — <span style="color: var(--color-text-secondary);">~4 SP</span></div>
-                            <div style="font-size: 13px; color: var(--color-text-secondary); line-height: 1.6;">
-                                Проработка corner cases, спецификация, подготовка состояний и деталей интерфейса. Полный комплект материалов для разработки.
-                            </div>
-                        </div>
-                    </label>
-                </div>
-
-                <div class="factor-group">
-                    <label style="display: flex; align-items: flex-start; gap: 12px; cursor: pointer; padding: 12px; border-radius: 8px; transition: background 0.15s;" >
-                        <input type="checkbox" id="stage-review" onchange="calculateProcess()" style="margin-top: 4px; width: 18px; height: 18px; cursor: pointer;">
-                        <div style="flex: 1;">
-                            <div style="font-size: 15px; font-weight: 500; margin-bottom: 4px;">Design Review — <span style="color: var(--color-text-secondary);">1 SP</span></div>
-                            <div style="font-size: 13px; color: var(--color-text-secondary); line-height: 1.6;">
-                                Проверка соответствия реализации макетам, фиксация проблем и расхождений, рекомендации по доработке.
-                            </div>
-                        </div>
-                    </label>
-                </div>
-            </div>
-
-            <div id="epic-flow" style="display: none;">
-                <div style="background: var(--color-bg); border: 0.5px solid var(--color-border); border-radius: 12px; padding: 1.25rem; margin-bottom: 1rem;">
-                    <div style="font-size: 15px; font-weight: 500; margin-bottom: 1rem;">Декомпозиция эпика</div>
-                    
-                    <div style="font-size: 14px; line-height: 1.7; color: var(--color-text-secondary); margin-bottom: 1.5rem;">
-                        Research сделан для всего эпика. Каждая подзадача — это часть Main Flow.
-                    </div>
-
-                    <label style="display: flex; align-items: flex-start; gap: 12px; cursor: pointer; padding: 12px; border-radius: 8px; margin-bottom: 1.5rem; background: var(--color-bg-secondary);">
-                        <input type="checkbox" id="epic-stage-draft" onchange="generateEpicTasks()" style="margin-top: 4px; width: 18px; height: 18px; cursor: pointer;">
-                        <div style="flex: 1;">
-                            <div style="font-size: 15px; font-weight: 500; margin-bottom: 2px;">Draft / черновой макет — <span style="color: var(--color-text-secondary);">~6 SP</span></div>
-                            <div style="font-size: 13px; color: var(--color-text-secondary);">Быстрая визуализация решения по всему эпику, проверка гипотез</div>
-                        </div>
-                    </label>
-
-                    <div style="margin-bottom: 1.5rem;">
-                        <label style="font-size: 14px; font-weight: 500; margin-bottom: 12px; display: block;">На сколько подзадач дробить?</label>
-                        <div class="stepper-wrap">
-                            <button class="stepper-btn" onclick="changeEpicParts(-1)">−</button>
-                            <span class="stepper-val" id="epic-parts-val">2</span>
-                            <button class="stepper-btn" onclick="changeEpicParts(1)">+</button>
-                            <input type="range" min="2" max="5" value="2" id="epic-parts" oninput="syncEpicPartsFromSlider()" style="flex: 1;">
                         </div>
                     </div>
-
-                    <div id="mainflow-parts-container" style="margin-bottom: 1.5rem;"></div>
-
-                    <label style="display: flex; align-items: flex-start; gap: 12px; cursor: pointer; padding: 12px; border-radius: 8px; margin-bottom: 8px; background: var(--color-bg-secondary);">
-                        <input type="checkbox" id="epic-stage-prep" onchange="generateEpicTasks()" style="margin-top: 4px; width: 18px; height: 18px; cursor: pointer;">
-                        <div style="flex: 1;">
-                            <div style="font-size: 15px; font-weight: 500; margin-bottom: 2px;">Подготовка к разработке — <span style="color: var(--color-text-secondary);"><span id="epic-prep-val">2</span> SP × кол-во подзадач</span></div>
-                            <div style="font-size: 13px; color: var(--color-text-secondary); margin-bottom: 8px;">Corner cases, спецификация, состояния интерфейса</div>
-                            <div style="display: flex; align-items: center; gap: 12px;">
-                                <input type="range" min="1" max="16" value="4" id="epic-prep-sp" oninput="document.getElementById('epic-prep-val').textContent=this.value; generateEpicTasks();" style="flex: 1;">
-                            </div>
-                        </div>
-                    </label>
-
-                    <label style="display: flex; align-items: flex-start; gap: 12px; cursor: pointer; padding: 12px; border-radius: 8px; margin-bottom: 1.5rem; background: var(--color-bg-secondary);">
-                        <input type="checkbox" id="epic-stage-review" onchange="generateEpicTasks()" style="margin-top: 4px; width: 18px; height: 18px; cursor: pointer;">
-                        <div style="flex: 1;">
-                            <div style="font-size: 15px; font-weight: 500; margin-bottom: 2px;">Design Review — <span style="color: var(--color-text-secondary);">1 SP × кол-во подзадач</span></div>
-                            <div style="font-size: 13px; color: var(--color-text-secondary);">Проверка соответствия реализации макетам</div>
-                        </div>
-                    </label>
-
-                    <div id="epic-tasks-list"></div>
-                </div>
+                </label>
             </div>
 
-            <div id="process-warning" style="display: none; margin-top: 1.5rem; padding: 1rem; background: var(--color-amber-light); color: var(--color-amber-dark); border-radius: 8px; font-size: 14px; line-height: 1.6;"></div>
+            <div class="factor-group">
+                <label style="display: flex; align-items: flex-start; gap: 12px; cursor: pointer; padding: 12px; border-radius: 8px;">
+                    <input type="checkbox" id="stage-prep" onchange="updateTotal()" style="margin-top: 4px; width: 18px; height: 18px; cursor: pointer;">
+                    <div style="flex: 1;">
+                        <div style="font-size: 15px; font-weight: 500; margin-bottom: 4px;">Подготовка к разработке — <span style="color: var(--color-text-secondary);">~4 SP</span></div>
+                        <div style="font-size: 13px; color: var(--color-text-secondary); line-height: 1.6;">
+                            Проработка corner cases, спецификация, подготовка состояний и деталей интерфейса.
+                        </div>
+                    </div>
+                </label>
+            </div>
+
+            <div class="factor-group">
+                <label style="display: flex; align-items: flex-start; gap: 12px; cursor: pointer; padding: 12px; border-radius: 8px;">
+                    <input type="checkbox" id="stage-review" onchange="updateTotal()" style="margin-top: 4px; width: 18px; height: 18px; cursor: pointer;">
+                    <div style="flex: 1;">
+                        <div style="font-size: 15px; font-weight: 500; margin-bottom: 4px;">Design Review — <span style="color: var(--color-text-secondary);">1 SP</span></div>
+                        <div style="font-size: 13px; color: var(--color-text-secondary); line-height: 1.6;">
+                            Проверка соответствия реализации макетам, фиксация проблем и расхождений.
+                        </div>
+                    </div>
+                </label>
+            </div>
+
+            <div id="process-result" style="display: none; background: var(--color-bg-secondary); border-radius: 12px; padding: 1rem; margin-top: 1rem; text-align: center;">
+                <div style="font-size: 13px; color: var(--color-text-secondary); margin-bottom: 0.5rem;" id="process-result-label"></div>
+            </div>
+
+            <div id="process-warning" style="display: none; margin-top: 1rem; padding: 1rem; background: var(--color-amber-light); color: var(--color-amber-dark); border-radius: 8px; font-size: 14px; line-height: 1.6;"></div>
 
             <div class="actions">
                 <button class="btn" onclick="resetProcess()">
@@ -769,8 +703,7 @@
 
         function setMainFlowSP(value) {
             const slider = document.getElementById('mainflow-sp');
-            slider.value = value;
-            document.getElementById('mainflow-sp-value').textContent = value;
+            if (slider) { slider.value = value; document.getElementById('mainflow-sp-value').textContent = value; }
             updateTotal();
         }
 
@@ -781,13 +714,6 @@
         }
 
         function updateTotal() {
-            const decision = document.querySelector('input[name="epic-type"]:checked')?.value;
-            
-            if (decision === 'epic') {
-                // Для эпика считаем в generateEpicTasks
-                return;
-            }
-            
             const research = document.getElementById('stage-research').checked ? 2 : 0;
             const draft = document.getElementById('stage-draft').checked ? 6 : 0;
             const mainflow = document.getElementById('stage-mainflow')?.checked ? parseInt(document.getElementById('mainflow-sp')?.value || 10) : 0;
@@ -795,105 +721,29 @@
             const review = document.getElementById('stage-review')?.checked ? 1 : 0;
             
             const total = research + draft + mainflow + prep + review;
-            
             document.getElementById('process-total').textContent = total + ' SP';
             
             const warningEl = document.getElementById('process-warning');
-            
-            if (total > 8) {
-                warningEl.style.display = 'block';
-                warningEl.innerHTML = '<strong>⚠️ Задача больше 8 SP</strong><br>Эта задача не влезет в одну неделю. Раздроби её на несколько отдельных задач по этапам.';
-            } else if (total === 0) {
+            if (total === 0) {
                 warningEl.style.display = 'none';
-            } else if (total > 5) {
+            } else if (total > 16) {
                 warningEl.style.display = 'block';
-                warningEl.innerHTML = '<strong>Задача на ' + total + ' SP</strong><br>Это больше половины недели. Если в спринте есть другие задачи, подумай о дроблении.';
+                warningEl.innerHTML = '<strong>⚠️ Задача больше 16 SP</strong><br>Не влезет в одну неделю. Раздроби на несколько задач по этапам.';
+            } else if (total > 8) {
+                warningEl.style.display = 'block';
+                warningEl.innerHTML = '<strong>Задача на ' + total + ' SP</strong><br>Больше половины недели. Если в спринте есть другие задачи — дроби.';
             } else {
                 warningEl.style.display = 'none';
             }
         }
 
         function resetProcess() {
-            document.getElementById('stage-research').checked = false;
-            ['stage-draft','epic-stage-draft','stage-mainflow','stage-prep','stage-review','epic-stage-prep','epic-stage-review'].forEach(id => {
+            ['stage-research','stage-draft','stage-mainflow','stage-prep','stage-review'].forEach(id => {
                 const el = document.getElementById(id);
                 if (el) el.checked = false;
             });
-            document.getElementById('epic-decision').style.display = 'none';
-            document.getElementById('simple-flow').style.display = 'none';
-            document.getElementById('epic-flow').style.display = 'none';
-            document.querySelectorAll('input[name="epic-type"]').forEach(r => r.checked = false);
             document.getElementById('process-total').textContent = '0 SP';
             document.getElementById('process-warning').style.display = 'none';
-        }
-
-        function selectOption(factor, value, btn) {
-            state[factor] = value;
-            
-            const group = btn.parentElement;
-            group.querySelectorAll('.option-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            
-            calculate();
-        }
-
-        function calculate() {
-            if (state.volume === null || state.complexity === null || state.iterations === null) {
-                document.getElementById('result').style.display = 'none';
-                return;
-            }
-            
-            const total = state.volume + state.complexity + state.iterations;
-            
-            let sp, description, examples, warning = '';
-            
-            if (total <= 2) {
-                sp = 1;
-                description = 'Минорная правка или гигиена';
-                examples = 'Замена иконок, правка текста, обновление цвета кнопки, добавление одного состояния';
-            } else if (total <= 4) {
-                sp = 2;
-                description = 'Стандартная задача в рамках текущей системы';
-                examples = 'Простая форма, один новый экран по гайдам, типовой компонент';
-            } else if (total <= 6) {
-                sp = 3;
-                description = 'Средняя задача с проработкой';
-                examples = 'Несколько связанных экранов, новая логика с edge cases, адаптация паттерна под новый контекст';
-            } else if (total <= 8) {
-                sp = 5;
-                description = 'Сложная задача с проработкой логики';
-                examples = 'Новый функционал (корзина, чекаут), полный флоу с разными сценариями, редизайн раздела';
-            } else if (total <= 11) {
-                sp = 8;
-                description = 'Исследовательская или комплексная задача';
-                examples = 'Полный редизайн раздела, создание дизайн-системы, UX-исследование + дизайн';
-                warning = '<div class="warning warning-medium"><strong>Внимание:</strong> Такая таска блокирует весь спринт. Подумай, можно ли дробить на этапы по 2-3 SP.</div>';
-            } else {
-                sp = 13;
-                description = 'Эпик — требует декомпозиции';
-                examples = 'Это не задача, а набор задач. Раздроби на этапы по 2-5 SP каждый.';
-                warning = '<div class="warning warning-high"><strong>Стоп!</strong> Такие таски не влезают в недельный спринт. Обязательно дроби на мелкие задачи.</div>';
-            }
-            
-            const resultEl = document.getElementById('result');
-            resultEl.innerHTML = `
-                <div class="sp-result">${sp} SP</div>
-                <div class="sp-label">${description}</div>
-                <div class="examples">${examples}</div>
-                ${warning}
-            `;
-            
-            resultEl.style.display = 'block';
-            resultEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        }
-
-        function reset() {
-            state.volume = null;
-            state.complexity = null;
-            state.iterations = null;
-            
-            document.querySelectorAll('.option-btn').forEach(btn => btn.classList.remove('active'));
-            document.getElementById('result').style.display = 'none';
         }
     </script>
 </body>
